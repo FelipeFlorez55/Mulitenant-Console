@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Branding & Theme Preview</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f9fa;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:20px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  input{font-family:inherit}
+</style>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const C = {
+  bg:"#f8f9fa", sidebar:"#1e293b", sidebarHover:"#334155", sidebarActive:"#3b82f6",
+  card:"#fff", border:"#e2e8f0", text:"#1e293b", muted:"#64748b",
+  pri:"#3b82f6", ok:"#22c55e", warn:"#f59e0b", err:"#ef4444",
+  purp:"#8b5cf6", ph:"#f1f5f9", inBg:"#f8fafc"
+};
+
+function useM(){const[m,s]=useState(window.innerWidth<700);useEffect(()=>{const h=()=>s(window.innerWidth<700);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);return m}
+
+function BrandingPreview() {
+  const m = useM();
+  const [pc, setPc] = useState("#3B82F6");
+  const [sc, setSc] = useState("#1E40AF");
+  const [pt, setPt] = useState(1);
+
+  const isLight = (hex) => { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return (r*299+g*587+b*114)/1000>150; };
+  const sideText = isLight(sc) ? "#1E293B" : "#fff";
+
+  const tabs = ["Login","Dashboard","Componentes","Formularios","Feedback","Tablas","Navegacion","Charts","Cards"];
+  const themes = [
+    { n:"Corporativo", p:"#3B82F6", s:"#1E40AF", b:"#1E293B" },
+    { n:"Claro",       p:"#6366F1", s:"#F8FAFC", b:"#F1F5F9" },
+    { n:"Oscuro",      p:"#A78BFA", s:"#0F172A", b:"#0F172A" },
+    { n:"Natural",     p:"#22C55E", s:"#14532D", b:"#14532D" },
+    { n:"Natural Claro", p:"#22C55E", s:"#F8FAFC", b:"#F8FAFC" },
+    { n:"Sunset",      p:"#F59E0B", s:"#9A3412", b:"#7C2D12" },
+    { n:"Elegante",    p:"#3B82F6", s:"#1E293B", b:"#1E293B" },
+    { n:"Oceano",      p:"#06B6D4", s:"#164E63", b:"#0C4A6E" },
+  ];
+
+  function LS({ size = 20 }) {
+    const s = size;
+    return <div style={{ width:s, height:s, borderRadius:4, background:pc+"18", display:"flex", alignItems:"center", justifyContent:"center", fontSize:s*0.22, color:pc, fontWeight:600, border:"1.5px solid "+pc+"30" }}>Logo</div>;
+  }
+
+  return (
+    <div style={{ width:m?"100%":720, background:C.card, borderRadius:12, border:"1px solid "+C.border, padding:m?16:32, boxShadow:"0 4px 24px rgba(0,0,0,.06)" }}>
+      <div style={{ textAlign:"center", marginBottom:20 }}>
+        <div style={{ fontSize:22, fontWeight:700, marginBottom:4 }}>Branding & Theme Preview</div>
+        <div style={{ fontSize:13, color:C.muted }}>Selecciona un tema o personaliza los colores para ver como se vera la consola</div>
+      </div>
+
+      {/* Temas predefinidos */}
+      <div style={{ background:C.inBg, borderRadius:8, padding:16, marginBottom:12, border:"1px solid "+C.border }}>
+        <div style={{ fontWeight:600, fontSize:14, marginBottom:12, color:C.text }}>Temas predefinidos</div>
+        <div style={{ display:"grid", gridTemplateColumns:m?"repeat(4,1fr)":"repeat(8,1fr)", gap:6 }}>
+          {themes.map(t=>{
+            const active = pc===t.p && sc===t.s;
+            return (
+              <div key={t.n} onClick={()=>{setPc(t.p);setSc(t.s);}} style={{ cursor:"pointer", borderRadius:8, border:"2px solid "+(active?t.p:C.border), overflow:"hidden", transform:active?"scale(1.05)":"scale(1)", transition:"transform .15s" }}>
+                <div style={{ background:t.b, padding:"8px 4px 4px", textAlign:"center" }}>
+                  <div style={{ background:"#fff", borderRadius:4, padding:"4px 3px", margin:"0 auto" }}>
+                    <div style={{ width:12, height:12, borderRadius:3, background:t.p+"25", margin:"0 auto 2px", border:"1.5px solid "+t.p }} />
+                    <div style={{ height:6, background:t.p, borderRadius:2 }} />
+                  </div>
+                </div>
+                <div style={{ padding:"4px 2px", textAlign:"center", background:"#fff" }}>
+                  <div style={{ fontSize:m?7:9, fontWeight:600 }}>{t.n}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Colores personalizados */}
+      <div style={{ background:C.inBg, borderRadius:8, padding:16, marginBottom:16, border:"1px solid "+C.border }}>
+        <div style={{ fontWeight:600, fontSize:14, marginBottom:12, color:C.text }}>Colores personalizados</div>
+        <div style={{ display:"grid", gridTemplateColumns:m?"1fr":"1fr 1fr", gap:16 }}>
+          <div>
+            <div style={{ fontSize:12, color:C.muted, marginBottom:6 }}>Color primario</div>
+            <div style={{ display:"flex", gap:5, marginBottom:8, flexWrap:"wrap" }}>
+              {["#3B82F6","#22C55E","#8B5CF6","#EF4444","#F59E0B","#06B6D4","#EC4899"].map(c=>(
+                <div key={c} onClick={()=>setPc(c)} style={{ width:28, height:28, borderRadius:6, background:c, border:c===pc?"3px solid #1e293b":"2px solid #fff", cursor:"pointer", boxShadow:"0 1px 3px rgba(0,0,0,.15)" }} />
+              ))}
+            </div>
+            <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:6, padding:"4px 8px", display:"flex", alignItems:"center", gap:8 }}>
+              <div style={{ width:20, height:20, borderRadius:4, background:pc, flexShrink:0 }} />
+              <input value={pc} onChange={e=>{const v=e.target.value;if(v.match(/^#?[0-9A-Fa-f]{0,6}$/))setPc(v.startsWith("#")?v:"#"+v);}} style={{ border:"none", outline:"none", fontFamily:"monospace", fontSize:13, width:"100%", background:"transparent" }} />
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize:12, color:C.muted, marginBottom:6 }}>Color secundario / Sidebar</div>
+            <div style={{ display:"flex", gap:5, marginBottom:8, flexWrap:"wrap" }}>
+              {["#1E40AF","#14532D","#4C1D95","#1E293B","#164E63","#0F172A","#F8FAFC","#7C2D12"].map(c=>(
+                <div key={c} onClick={()=>setSc(c)} style={{ width:28, height:28, borderRadius:6, background:c, border:c===sc?"3px solid #94a3b8":"2px solid #fff", cursor:"pointer", boxShadow:"0 1px 3px rgba(0,0,0,.15)" }} />
+              ))}
+            </div>
+            <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:6, padding:"4px 8px", display:"flex", alignItems:"center", gap:8 }}>
+              <div style={{ width:20, height:20, borderRadius:4, background:sc, flexShrink:0 }} />
+              <input value={sc} onChange={e=>{const v=e.target.value;if(v.match(/^#?[0-9A-Fa-f]{0,6}$/))setSc(v.startsWith("#")?v:"#"+v);}} style={{ border:"none", outline:"none", fontFamily:"monospace", fontSize:13, width:"100%", background:"transparent" }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Preview tabs */}
+      <div style={{ fontSize:14, fontWeight:600, marginBottom:8 }}>Preview en vivo</div>
+      <div style={{ display:"flex", background:"#fff", borderRadius:"8px 8px 0 0", border:"1px solid "+C.border, borderBottom:"none", overflowX:"auto" }}>
+        {tabs.map((t,i)=>(
+          <div key={t} onClick={()=>setPt(i)} style={{ padding:"8px 10px", fontSize:m?9:11, fontWeight:pt===i?700:400, color:pt===i?pc:C.muted, borderBottom:"2px solid "+(pt===i?pc:"transparent"), cursor:"pointer", whiteSpace:"nowrap" }}>{t}</div>
+        ))}
+      </div>
+      <div style={{ border:"1px solid "+C.border, borderRadius:"0 0 8px 8px", background:"#fff", padding:12, minHeight:220 }}>
+
+        {/* TAB 0 — Login */}
+        {pt===0 && (
+          <div style={{ background:sc, borderRadius:8, padding:16 }}>
+            <div style={{ background:"#fff", borderRadius:10, padding:16, maxWidth:220, margin:"0 auto", textAlign:"center" }}>
+              <div style={{ width:44, height:44, borderRadius:8, background:pc+"18", display:"flex", alignItems:"center", justifyContent:"center", fontSize:10, color:pc, fontWeight:600, border:"1.5px solid "+pc+"30", margin:"0 auto 6px" }}>Logo</div>
+              <div style={{ fontSize:12, fontWeight:700, marginBottom:8, color:sc }}>Iniciar sesion</div>
+              <div style={{ background:C.inBg, border:"1px solid "+C.border, borderRadius:4, padding:"4px 6px", fontSize:9, color:C.muted, marginBottom:4, textAlign:"left" }}>usuario@empresa.com</div>
+              <div style={{ background:C.inBg, border:"1px solid "+C.border, borderRadius:4, padding:"4px 6px", fontSize:9, color:C.muted, marginBottom:8, textAlign:"left" }}>********</div>
+              <div style={{ background:pc, color:"#fff", borderRadius:4, padding:"5px 0", fontSize:10, fontWeight:600 }}>Iniciar sesion</div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 1 — Dashboard */}
+        {pt===1 && (
+          <div style={{ display:"flex", height:280, borderRadius:8, overflow:"hidden", border:"1px solid "+C.border }}>
+            <div style={{ width:110, background:sc, padding:"8px 4px", display:"flex", flexDirection:"column", gap:2, flexShrink:0 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:4, padding:"4px 6px", marginBottom:4 }}>
+                <LS size={18} /><div style={{ color:sideText, fontSize:8, fontWeight:600 }}>Mi Empresa</div>
+              </div>
+              {[["Dashboard",true],["Usuarios",false],["Auditoria",false],["Notif.",false],["Plan",false]].map(it=>(
+                <div key={it[0]} style={{ display:"flex", alignItems:"center", gap:4, padding:"3px 6px", borderRadius:4, background:it[1]?pc:"transparent", fontSize:8, color:it[1]?"#fff":(isLight(sc)?"#64748B":"#94a3b8") }}>{it[0]}</div>
+              ))}
+            </div>
+            <div style={{ flex:1, background:C.bg, padding:8, overflow:"auto" }}>
+              <div style={{ display:"flex", gap:4, marginBottom:6 }}>
+                {[["Usuarios","3",pc],["Storage","0.1",C.ok],["Plan","Starter",C.purp]].map(it=>(
+                  <div key={it[0]} style={{ flex:1, background:"#fff", borderRadius:4, padding:"4px 2px", textAlign:"center", border:"1px solid "+C.border }}>
+                    <div style={{ fontSize:6, color:C.muted, textTransform:"uppercase" }}>{it[0]}</div>
+                    <div style={{ fontSize:11, fontWeight:700, color:it[2] }}>{it[1]}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background:"#fff", borderRadius:4, padding:6, border:"1px solid "+C.border, marginBottom:4 }}>
+                <div style={{ fontSize:7, fontWeight:600, marginBottom:3 }}>Botones</div>
+                <div style={{ display:"flex", gap:3, flexWrap:"wrap", marginBottom:3 }}>
+                  <div style={{ background:pc, color:"#fff", padding:"2px 6px", borderRadius:3, fontSize:7, fontWeight:600 }}>Primario</div>
+                  <div style={{ color:pc, padding:"2px 6px", borderRadius:3, fontSize:7, fontWeight:600, border:"1px solid "+pc }}>Outline</div>
+                  <div style={{ background:C.err, color:"#fff", padding:"2px 6px", borderRadius:3, fontSize:7, fontWeight:600 }}>Danger</div>
+                </div>
+              </div>
+              <div style={{ background:"#fff", borderRadius:4, padding:6, border:"1px solid "+C.border }}>
+                <div style={{ display:"flex", gap:3, flexWrap:"wrap" }}>
+                  {[["ACTIVE",pc],["OK",C.ok],["PENDING",C.warn],["ERROR",C.err]].map(it=>(
+                    <span key={it[0]} style={{ background:it[1]+"20", color:it[1], padding:"1px 5px", borderRadius:9999, fontSize:7, fontWeight:600 }}>{it[0]}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2 — Componentes */}
+        {pt===2 && (
+          <div style={{ display:"grid", gridTemplateColumns:m?"1fr":"1fr 1fr", gap:10 }}>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Toggles</div>
+                {[["Notificaciones email",true],["SMS",false],["Dark mode",true]].map(it=>(
+                  <div key={it[0]} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:5 }}>
+                    <span style={{ fontSize:9 }}>{it[0]}</span>
+                    <div style={{ width:26, height:14, borderRadius:7, background:it[1]?pc:C.border, position:"relative", flexShrink:0 }}>
+                      <div style={{ width:10, height:10, borderRadius:"50%", background:"#fff", position:"absolute", top:2, left:it[1]?14:2, boxShadow:"0 1px 2px rgba(0,0,0,.2)" }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Radio buttons</div>
+                {[["Administrador",true],["Operador",false],["Visor",false]].map(it=>(
+                  <div key={it[0]} style={{ display:"flex", alignItems:"center", gap:6, marginBottom:5 }}>
+                    <div style={{ width:14, height:14, borderRadius:"50%", border:"2px solid "+(it[1]?pc:C.border), display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                      {it[1]&&<div style={{ width:6, height:6, borderRadius:"50%", background:pc }} />}
+                    </div>
+                    <span style={{ fontSize:9, color:it[1]?pc:C.text, fontWeight:it[1]?600:400 }}>{it[0]}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Checkboxes</div>
+                {[["Notif. email",true,false],["Resumen semanal",true,false],["Alertas",false,false],["Seleccionar todo",false,true]].map(([label,checked,indet])=>(
+                  <div key={label} style={{ display:"flex", alignItems:"center", gap:6, marginBottom:5 }}>
+                    <div style={{ width:14, height:14, borderRadius:3, border:"2px solid "+(checked||indet?pc:C.border), background:checked||indet?pc:"#fff", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                      {checked&&<span style={{ color:"#fff", fontSize:9, fontWeight:700, lineHeight:1 }}>✓</span>}
+                      {indet&&<div style={{ width:8, height:2, background:"#fff", borderRadius:1 }}/>}
+                    </div>
+                    <span style={{ fontSize:9, color:checked?C.text:C.muted }}>{label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Slider / Range</div>
+                {[["Limite pH","65%"],["Temperatura","40%"],["Caudal","82%"]].map(it=>(
+                  <div key={it[0]} style={{ marginBottom:8 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", fontSize:8, marginBottom:3 }}>
+                      <span style={{ color:C.muted }}>{it[0]}</span><span style={{ color:pc, fontWeight:600 }}>{it[1]}</span>
+                    </div>
+                    <div style={{ background:C.ph, borderRadius:4, height:6, position:"relative" }}>
+                      <div style={{ background:pc, width:it[1], height:"100%", borderRadius:4 }} />
+                      <div style={{ width:12, height:12, borderRadius:"50%", background:pc, border:"2px solid #fff", position:"absolute", top:-3, left:it[1], marginLeft:-6, boxShadow:"0 1px 3px rgba(0,0,0,.2)" }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Avatars</div>
+                <div style={{ display:"flex", gap:6, alignItems:"center", marginBottom:8 }}>
+                  {[{ini:"CE",color:pc},{ini:"LG",color:C.purp},{ini:"PM",color:C.ok},{ini:"AM",color:C.warn}].map((a,i)=>(
+                    <div key={i} style={{ width:24, height:24, borderRadius:"50%", background:a.color+"20", color:a.color, display:"flex", alignItems:"center", justifyContent:"center", fontSize:8, fontWeight:700 }}>{a.ini}</div>
+                  ))}
+                </div>
+                <div style={{ display:"flex" }}>
+                  {[pc,C.purp,C.ok,C.warn,"#94a3b8"].map((c,i)=>(
+                    <div key={i} style={{ width:22, height:22, borderRadius:"50%", background:c+"25", color:c, border:"2px solid #fff", marginLeft:i>0?-8:0, display:"flex", alignItems:"center", justifyContent:"center", fontSize:7, fontWeight:700, position:"relative", zIndex:5-i }}>{i<4?["CE","LG","PM","AM"][i]:"+3"}</div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Stepper / Wizard</div>
+                <div style={{ display:"flex", alignItems:"center" }}>
+                  {[["Datos",true,true],["Branding",true,false],["Revision",false,false]].map(([label,active,done],i)=>(
+                    <div key={label} style={{ display:"flex", alignItems:"center", flex:1 }}>
+                      <div style={{ display:"flex", flexDirection:"column", alignItems:"center" }}>
+                        <div style={{ width:18, height:18, borderRadius:"50%", background:done?C.ok:active?pc:C.border, color:done||active?"#fff":C.muted, display:"flex", alignItems:"center", justifyContent:"center", fontSize:8, fontWeight:700 }}>{done?"✓":i+1}</div>
+                        <div style={{ fontSize:7, color:active?pc:C.muted, marginTop:2 }}>{label}</div>
+                      </div>
+                      {i<2&&<div style={{ flex:1, height:2, background:done?C.ok:C.border, margin:"0 3px", marginBottom:12 }}/>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>File upload</div>
+                <div style={{ border:"2px dashed "+pc+"50", borderRadius:6, padding:"10px 6px", textAlign:"center", background:pc+"05" }}>
+                  <div style={{ fontSize:16, marginBottom:2 }}>&#128206;</div>
+                  <div style={{ fontSize:8, fontWeight:600, color:pc }}>Arrastra o clic</div>
+                  <div style={{ fontSize:7, color:C.muted }}>PDF, XLSX - Max 10MB</div>
+                </div>
+                <div style={{ marginTop:4, display:"flex", gap:4, alignItems:"center", background:"#fff", border:"1px solid "+C.border, borderRadius:4, padding:"3px 6px" }}>
+                  <span style={{ fontSize:10 }}>&#128196;</span>
+                  <span style={{ fontSize:8, flex:1 }}>reporte_q1.pdf</span>
+                  <div style={{ width:30, height:4, background:C.ph, borderRadius:2, overflow:"hidden" }}><div style={{ width:"70%", height:"100%", background:pc }} /></div>
+                  <span style={{ fontSize:7, color:C.muted }}>70%</span>
+                </div>
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Dropdown</div>
+                <div style={{ background:"#fff", border:"1px solid "+pc, borderRadius:4, overflow:"hidden" }}>
+                  {["ANLA","CAR Cundinamarca","Cornare"].map((o,i)=>(
+                    <div key={o} style={{ padding:"3px 6px", fontSize:8, background:i===0?pc+"15":"#fff", color:i===0?pc:C.text, fontWeight:i===0?600:400, borderLeft:i===0?"2px solid "+pc:"2px solid transparent" }}>{i===0?"✓ ":""}{o}</div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Tooltip</div>
+                <div style={{ display:"flex", gap:12, alignItems:"flex-end" }}>
+                  <div style={{ position:"relative", display:"inline-block" }}>
+                    <div style={{ background:"#1e293b", color:"#fff", padding:"3px 8px", borderRadius:4, fontSize:7, whiteSpace:"nowrap" }}>Editar usuario</div>
+                    <div style={{ width:6, height:6, background:"#1e293b", position:"absolute", bottom:-3, left:"50%", marginLeft:-3, transform:"rotate(45deg)" }}/>
+                  </div>
+                  <div style={{ position:"relative", display:"inline-block" }}>
+                    <div style={{ background:pc, color:"#fff", padding:"3px 8px", borderRadius:4, fontSize:7, whiteSpace:"nowrap" }}>3 notificaciones</div>
+                    <div style={{ width:6, height:6, background:pc, position:"absolute", bottom:-3, left:"50%", marginLeft:-3, transform:"rotate(45deg)" }}/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3 — Formularios */}
+        {pt===3 && (
+          <div style={{ display:"grid", gridTemplateColumns:m?"1fr":"1fr 1fr", gap:10 }}>
+            <div>
+              <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Estados de input</div>
+              {[{l:"Normal",b:C.border,bg:C.inBg},{l:"Focus",b:pc,bg:"#fff",sh:"0 0 0 3px "+pc+"20"},{l:"Error",b:C.err,bg:"#fff",note:"Campo obligatorio"},{l:"Disabled",b:C.border,bg:C.ph,op:0.5}].map((s,i)=>(
+                <div key={i} style={{ marginBottom:6, opacity:s.op||1 }}>
+                  <div style={{ fontSize:7, color:C.muted, marginBottom:2 }}>{s.l}</div>
+                  <div style={{ background:s.bg, border:"1.5px solid "+s.b, borderRadius:5, padding:"4px 8px", fontSize:9, boxShadow:s.sh||"none" }}>{s.op?"Deshabilitado":"Texto ejemplo"}</div>
+                  {s.note&&<div style={{ fontSize:7, color:C.err, marginTop:1 }}>{s.note}</div>}
+                </div>
+              ))}
+              <div style={{ fontSize:9, fontWeight:600, margin:"8px 0 4px" }}>Date picker</div>
+              <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:6, padding:6 }}>
+                <div style={{ display:"flex", justifyContent:"space-between", marginBottom:4 }}>
+                  <span style={{ fontSize:8, color:pc }}>&#9664;</span><span style={{ fontSize:8, fontWeight:700 }}>Abril 2026</span><span style={{ fontSize:8, color:pc }}>&#9654;</span>
+                </div>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(7,1fr)", gap:1, textAlign:"center" }}>
+                  {["L","M","M","J","V","S","D"].map((d,i)=><div key={i} style={{ fontSize:6, color:C.muted, fontWeight:600 }}>{d}</div>)}
+                  {[...Array(2).fill(""),3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30].map((d,i)=>(
+                    <div key={i} style={{ fontSize:6, padding:"2px 0", borderRadius:2, background:d===3?pc:d>=7&&d<=11?pc+"15":"transparent", color:d===3?"#fff":d>=7&&d<=11?pc:d?"":C.ph, fontWeight:d===3?700:400 }}>{d||""}</div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Prefijo / Sufijo</div>
+              {[{pre:"pH",val:"6.8",suf:""},{pre:"",val:"12,500",suf:"mg/L"},{pre:"$",val:"580",suf:"USD/mes"}].map((f,i)=>(
+                <div key={i} style={{ display:"flex", marginBottom:5, border:"1.5px solid "+C.border, borderRadius:5, overflow:"hidden", fontSize:9 }}>
+                  {f.pre&&<div style={{ background:C.ph, padding:"3px 6px", color:C.muted, borderRight:"1px solid "+C.border, fontWeight:600, display:"flex", alignItems:"center" }}>{f.pre}</div>}
+                  <div style={{ background:"#fff", padding:"3px 8px", flex:1, color:C.text }}>{f.val}</div>
+                  {f.suf&&<div style={{ background:pc+"15", padding:"3px 6px", color:pc, borderLeft:"1px solid "+C.border, fontWeight:600, display:"flex", alignItems:"center", fontSize:8 }}>{f.suf}</div>}
+                </div>
+              ))}
+              <div style={{ fontSize:9, fontWeight:600, margin:"8px 0 4px" }}>Multi-select / Tag input</div>
+              <div style={{ background:"#fff", border:"1.5px solid "+pc, borderRadius:5, padding:"3px 6px", display:"flex", alignItems:"center", gap:3, flexWrap:"wrap" }}>
+                {["Res. 631","Res. 2254","ANLA"].map(t=>(
+                  <div key={t} style={{ background:pc+"15", color:pc, padding:"1px 6px", borderRadius:9999, fontSize:7, fontWeight:600, display:"flex", alignItems:"center", gap:3 }}>{t}<span style={{ cursor:"pointer", fontSize:8 }}>x</span></div>
+                ))}
+                <span style={{ fontSize:8, color:C.muted }}>Agregar...</span>
+              </div>
+              <div style={{ fontSize:9, fontWeight:600, margin:"8px 0 4px" }}>Search + dropdown</div>
+              <div>
+                <div style={{ background:"#fff", border:"1.5px solid "+pc, borderRadius:"5px 5px 0 0", padding:"4px 8px", fontSize:9, display:"flex", alignItems:"center", gap:4 }}>
+                  <span style={{ color:C.muted }}>&#128269;</span><span>vertim</span>
+                </div>
+                <div style={{ border:"1px solid "+C.border, borderRadius:"0 0 5px 5px", background:"#fff", borderTop:"none" }}>
+                  {["Vertimientos Q1 2026","Vertimientos Q4 2025"].map((r,i)=>(
+                    <div key={i} style={{ padding:"3px 8px", fontSize:8, background:i===0?pc+"10":"#fff", color:i===0?pc:C.text, borderBottom:i===0?"1px solid "+C.border:"none" }}>{r}</div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ fontSize:9, fontWeight:600, margin:"8px 0 4px" }}>Number stepper</div>
+              <div style={{ display:"flex", border:"1.5px solid "+C.border, borderRadius:5, overflow:"hidden", width:100 }}>
+                <div style={{ padding:"3px 8px", background:C.ph, color:pc, fontWeight:700, fontSize:10, cursor:"pointer", display:"flex", alignItems:"center" }}>-</div>
+                <div style={{ flex:1, textAlign:"center", padding:"3px 0", fontSize:9, fontWeight:600 }}>5</div>
+                <div style={{ padding:"3px 8px", background:C.ph, color:pc, fontWeight:700, fontSize:10, cursor:"pointer", display:"flex", alignItems:"center" }}>+</div>
+              </div>
+              <div style={{ fontSize:9, fontWeight:600, margin:"8px 0 4px" }}>Textarea</div>
+              <div style={{ background:C.inBg, border:"1.5px solid "+C.border, borderRadius:5, padding:"4px 8px", fontSize:8, color:C.muted, minHeight:36, lineHeight:1.5 }}>Observaciones del muestreo...</div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4 — Feedback */}
+        {pt===4 && (
+          <div>
+            <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Alertas inline</div>
+            {[{i:"✅",t:"Reporte guardado correctamente",c:C.ok},{i:"&#8505;&#65039;",t:"Recuerda adjuntar soporte",c:pc},{i:"&#9888;&#65039;",t:"Cuota de reportes al 80%",c:C.warn},{i:"&#10060;",t:"Error al procesar archivo",c:C.err}].map(a=>(
+              <div key={a.t} style={{ display:"flex", gap:6, alignItems:"center", padding:"5px 8px", borderRadius:5, background:a.c+"08", border:"1px solid "+a.c+"30", marginBottom:4 }}>
+                <span style={{ fontSize:10 }} dangerouslySetInnerHTML={{__html:a.i}}/>
+                <div style={{ flex:1, fontSize:8, fontWeight:600, color:a.c }}>{a.t}</div>
+              </div>
+            ))}
+            <div style={{ fontSize:9, fontWeight:600, margin:"10px 0 6px" }}>Empty state</div>
+            <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:6, padding:"16px 8px", textAlign:"center" }}>
+              <div style={{ fontSize:24, marginBottom:4 }}>&#128203;</div>
+              <div style={{ fontSize:10, fontWeight:700, color:C.text, marginBottom:2 }}>No hay reportes aun</div>
+              <div style={{ fontSize:8, color:C.muted, marginBottom:8 }}>Crea tu primer reporte para empezar</div>
+              <div style={{ background:pc, color:"#fff", padding:"3px 10px", borderRadius:4, fontSize:8, fontWeight:600, display:"inline-block" }}>+ Crear reporte</div>
+            </div>
+            <div style={{ fontSize:9, fontWeight:600, margin:"10px 0 6px" }}>Skeleton loading</div>
+            <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:6, padding:8 }}>
+              <div style={{ display:"flex", gap:8, alignItems:"center", marginBottom:8 }}>
+                <div style={{ width:28, height:28, borderRadius:"50%", background:C.ph, animation:"pulse 1.5s infinite", flexShrink:0 }}/>
+                <div style={{ flex:1 }}>
+                  <div style={{ height:8, background:C.ph, borderRadius:3, marginBottom:4, width:"60%", animation:"pulse 1.5s infinite" }}/>
+                  <div style={{ height:6, background:C.ph, borderRadius:3, width:"40%", animation:"pulse 1.5s infinite" }}/>
+                </div>
+              </div>
+              {[100,85,70].map((w,i)=><div key={i} style={{ height:6, background:C.ph, borderRadius:3, marginBottom:4, width:w+"%", animation:"pulse 1.5s infinite" }}/>)}
+            </div>
+            <div style={{ fontSize:9, fontWeight:600, margin:"10px 0 6px" }}>Confirm dialog</div>
+            <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:8, padding:10, boxShadow:"0 4px 12px rgba(0,0,0,.08)" }}>
+              <div style={{ fontSize:10, fontWeight:700, marginBottom:4 }}>&#9888;&#65039; Eliminar usuario?</div>
+              <div style={{ fontSize:8, color:C.muted, marginBottom:8 }}>Esta accion no se puede deshacer.</div>
+              <div style={{ display:"flex", gap:4, justifyContent:"flex-end" }}>
+                <div style={{ padding:"3px 8px", borderRadius:4, fontSize:8, fontWeight:600, border:"1px solid "+C.border, color:C.muted }}>Cancelar</div>
+                <div style={{ padding:"3px 8px", borderRadius:4, fontSize:8, fontWeight:600, background:C.err, color:"#fff" }}>Eliminar</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5 — Tablas */}
+        {pt===5 && (
+          <div style={{ overflowX:"auto" }}>
+            <table style={{ width:"100%", borderCollapse:"collapse", fontSize:8, minWidth:320 }}>
+              <thead><tr style={{ background:C.ph }}>{["Parametro","Limite","Medido","Cumple"].map((h,i)=><th key={i} style={{ textAlign:"left", padding:"4px 6px", fontWeight:700, color:C.muted, fontSize:7, textTransform:"uppercase" }}>{h}</th>)}</tr></thead>
+              <tbody>
+                {[{p:"pH",lim:"6.0-9.0",med:"7.2",ok:true},{p:"DBO5",lim:"<= 30 mg/L",med:"18",ok:true},{p:"SST",lim:"<= 50 mg/L",med:"62",ok:false},{p:"Temp",lim:"<= 30 C",med:"28",ok:true},{p:"Grasas",lim:"<= 10 mg/L",med:"11.4",ok:false}].map((r,i)=>(
+                  <tr key={i} style={{ borderTop:"1px solid "+C.border, background:r.ok?"transparent":C.err+"08" }}>
+                    <td style={{ padding:"4px 6px", fontWeight:600 }}>{r.p}</td>
+                    <td style={{ padding:"4px 6px", color:C.muted }}>{r.lim}</td>
+                    <td style={{ padding:"4px 6px", fontWeight:700, color:r.ok?C.ok:C.err }}>{r.med}</td>
+                    <td style={{ padding:"4px 6px" }}><span style={{ background:r.ok?C.ok+"20":C.err+"20", color:r.ok?C.ok:C.err, padding:"1px 6px", borderRadius:9999, fontSize:7, fontWeight:700 }}>{r.ok?"✓ Cumple":"x Excede"}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ fontSize:9, fontWeight:600, margin:"12px 0 6px" }}>Tabla de usuarios (mini)</div>
+            <table style={{ width:"100%", borderCollapse:"collapse", fontSize:8, minWidth:280 }}>
+              <thead><tr style={{ background:C.ph }}>{["Usuario","Rol","Estado"].map((h,i)=><th key={i} style={{ textAlign:"left", padding:"4px 6px", fontWeight:700, color:C.muted, fontSize:7, textTransform:"uppercase" }}>{h}</th>)}</tr></thead>
+              <tbody>{[{n:"Cesar E.",r:"Admin",rc:pc,st:"Activo",stc:C.ok},{n:"Carlos M.",r:"Operador",rc:C.purp,st:"Activo",stc:C.ok},{n:"Maria L.",r:"Visor",rc:C.muted,st:"Pendiente",stc:C.warn}].map((u,i)=>(
+                <tr key={i} style={{ borderTop:"1px solid "+C.border }}>
+                  <td style={{ padding:"4px 6px", fontWeight:600 }}>{u.n}</td>
+                  <td style={{ padding:"4px 6px" }}><span style={{ background:u.rc+"20", color:u.rc, padding:"1px 5px", borderRadius:9999, fontSize:7, fontWeight:600 }}>{u.r}</span></td>
+                  <td style={{ padding:"4px 6px" }}><span style={{ background:u.stc+"20", color:u.stc, padding:"1px 4px", borderRadius:9999, fontSize:7, fontWeight:600 }}>{u.st}</span></td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+        )}
+
+        {/* TAB 6 — Navegacion */}
+        {pt===6 && (
+          <div style={{ display:"grid", gridTemplateColumns:m?"1fr":"1fr 1fr", gap:10 }}>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Breadcrumbs</div>
+                <div style={{ display:"flex", alignItems:"center", gap:3, fontSize:8, flexWrap:"wrap" }}>
+                  {["Plataforma","Mi Empresa","Reportes","Vertimientos Q1"].map((s,i,arr)=>(
+                    <span key={s} style={{ display:"flex", alignItems:"center", gap:3 }}>
+                      <span style={{ color:i===arr.length-1?C.text:pc, fontWeight:i===arr.length-1?600:400, textDecoration:i<arr.length-1?"underline":"none" }}>{s}</span>
+                      {i<arr.length-1&&<span style={{ color:C.muted }}>/</span>}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Tabs horizontales</div>
+                <div style={{ display:"flex", background:"#fff", borderRadius:6, border:"1px solid "+C.border, overflow:"hidden", marginBottom:6 }}>
+                  {["General","Seguridad","Avanzado"].map((t,i)=>(
+                    <div key={t} style={{ flex:1, padding:"4px 0", textAlign:"center", fontSize:8, fontWeight:i===0?700:400, color:i===0?pc:C.muted, borderBottom:"2px solid "+(i===0?pc:"transparent") }}>{t}</div>
+                  ))}
+                </div>
+                <div style={{ display:"flex", gap:4 }}>
+                  {["Todos","Activos","Pendientes"].map((t,i)=>(
+                    <div key={t} style={{ padding:"3px 8px", borderRadius:9999, fontSize:8, fontWeight:i===0?700:400, background:i===0?pc:C.ph, color:i===0?"#fff":C.muted }}>{t}</div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Paginacion</div>
+                <div style={{ display:"flex", gap:3, alignItems:"center" }}>
+                  {["<","1","2","3","...","12",">"].map((p,i)=>(
+                    <div key={i} style={{ padding:"2px 6px", borderRadius:4, fontSize:8, background:p==="2"?pc:"transparent", color:p==="2"?"#fff":C.muted, border:p==="2"?"none":"1px solid "+C.border, fontWeight:p==="2"?700:400 }}>{p}</div>
+                  ))}
+                </div>
+                <div style={{ fontSize:7, color:C.muted, marginTop:4 }}>Mostrando 11-20 de 142 resultados</div>
+              </div>
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Sidebar estados</div>
+                <div style={{ display:"flex", gap:6 }}>
+                  <div style={{ background:sc, borderRadius:4, padding:"6px 4px", width:80 }}>
+                    {[["Dashboard",true],["Usuarios",false],["Auditoria",false]].map(it=>(
+                      <div key={it[0]} style={{ display:"flex", alignItems:"center", gap:3, padding:"2px 4px", borderRadius:3, background:it[1]?pc:"transparent", fontSize:7, color:it[1]?"#fff":(isLight(sc)?"#64748B":"#94a3b8") }}>{it[0]}</div>
+                    ))}
+                  </div>
+                  <div style={{ background:sc, borderRadius:4, padding:"6px 4px", width:28 }}>
+                    {[true,false,false].map((active,i)=>(
+                      <div key={i} style={{ padding:"3px 0", textAlign:"center", background:active?pc+"30":"transparent", borderRadius:3, marginBottom:2, fontSize:8, color:isLight(sc)?"#64748B":"#94a3b8" }}>{["D","U","A"][i]}</div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Accordion</div>
+                {[["Datos generales",true,"Razon social, NIT, direccion."],["Config regional",false,""],["Integraciones",false,""]].map(([title,open,content],i)=>(
+                  <div key={title} style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:4, marginBottom:3, overflow:"hidden" }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", padding:"4px 6px", background:open?pc+"08":"#fff" }}>
+                      <span style={{ fontSize:8, fontWeight:open?700:400, color:open?pc:C.text }}>{title}</span>
+                      <span style={{ fontSize:8, color:open?pc:C.muted }}>{open?"▴":"▾"}</span>
+                    </div>
+                    {open&&<div style={{ padding:"4px 6px", fontSize:7, color:C.muted, borderTop:"1px solid "+C.border }}>{content}</div>}
+                  </div>
+                ))}
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Tabs verticales</div>
+                <div style={{ display:"flex", gap:6 }}>
+                  <div style={{ display:"flex", flexDirection:"column", gap:2, width:80 }}>
+                    {["Datos empresa","Branding","Subdominio","Regional"].map((t,i)=>(
+                      <div key={t} style={{ padding:"4px 6px", borderRadius:4, fontSize:8, fontWeight:i===0?700:400, color:i===0?pc:C.muted, background:i===0?pc+"12":"transparent", borderLeft:"2px solid "+(i===0?pc:"transparent") }}>{t}</div>
+                    ))}
+                  </div>
+                  <div style={{ flex:1, background:"#fff", borderRadius:4, padding:6, border:"1px solid "+C.border }}>
+                    <div style={{ fontSize:8, fontWeight:700, color:pc, marginBottom:4 }}>Datos empresa</div>
+                    <div style={{ height:6, background:C.ph, borderRadius:3, marginBottom:3 }}/>
+                    <div style={{ height:6, background:C.ph, borderRadius:3, width:"80%" }}/>
+                  </div>
+                </div>
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Mobile bottom nav</div>
+                <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:8, display:"flex", overflow:"hidden" }}>
+                  {[["Inicio",true],["Reportes",false],["Notif.",false],["Perfil",false]].map(it=>(
+                    <div key={it[0]} style={{ flex:1, padding:"6px 4px", textAlign:"center", borderTop:it[1]?"2px solid "+pc:"2px solid transparent" }}>
+                      <div style={{ fontSize:7, color:it[1]?pc:C.muted, fontWeight:it[1]?700:400 }}>{it[0]}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Command palette</div>
+                <div style={{ background:"#fff", border:"1.5px solid "+pc, borderRadius:6, overflow:"hidden" }}>
+                  <div style={{ padding:"4px 8px", display:"flex", alignItems:"center", gap:4, borderBottom:"1px solid "+C.border }}>
+                    <span style={{ fontSize:10, color:C.muted }}>&#128269;</span>
+                    <span style={{ fontSize:8, color:C.text }}>Buscar acciones...</span>
+                    <span style={{ marginLeft:"auto", fontSize:7, color:C.muted, background:C.ph, padding:"1px 4px", borderRadius:3 }}>&#8984;K</span>
+                  </div>
+                  {[["Ir a Dashboard","Navegacion"],["Gestionar usuarios","Accion"],["Exportar auditoria","Accion"]].map(([label,cat],i)=>(
+                    <div key={label} style={{ padding:"3px 8px", fontSize:8, display:"flex", alignItems:"center", gap:6, background:i===0?pc+"10":"#fff", borderBottom:i<2?"1px solid "+C.border+"60":"none" }}>
+                      <span style={{ flex:1, color:i===0?pc:C.text, fontWeight:i===0?600:400 }}>{label}</span>
+                      <span style={{ fontSize:7, color:C.muted }}>{cat}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 7 — Charts */}
+        {pt===7 && (
+          <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+            <div>
+              <div style={{ fontSize:9, fontWeight:600, marginBottom:4 }}>Linea de tendencia</div>
+              <div style={{ background:C.inBg, borderRadius:6, padding:"8px 8px 4px", height:70 }}>
+                <svg width="100%" height="52" viewBox="0 0 260 52" preserveAspectRatio="none">
+                  <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={pc} stopOpacity="0.15"/><stop offset="100%" stopColor={pc} stopOpacity="0"/></linearGradient></defs>
+                  <line x1="0" y1="18" x2="260" y2="18" stroke={C.err} strokeWidth="1" strokeDasharray="4,3" opacity="0.6"/>
+                  <path d="M0,42 L32,38 L65,30 L97,34 L130,22 L162,28 L195,16 L227,20 L260,12 L260,52 L0,52 Z" fill="url(#lg)"/>
+                  <path d="M0,42 L32,38 L65,30 L97,34 L130,22 L162,28 L195,16 L227,20 L260,12" fill="none" stroke={pc} strokeWidth="2" strokeLinejoin="round"/>
+                  {[[0,42],[65,30],[130,22],[195,16],[260,12]].map(([x,y],i)=>(<circle key={i} cx={x} cy={y} r="3" fill={pc} stroke="#fff" strokeWidth="1.5"/>))}
+                </svg>
+                <div style={{ display:"flex", justifyContent:"space-between", fontSize:7, color:C.muted, marginTop:2 }}>
+                  {["Oct","Nov","Dic","Ene","Feb","Mar","Abr"].map(m2=><span key={m2}>{m2}</span>)}
+                </div>
+              </div>
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+              <div>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:4 }}>Barras</div>
+                <div style={{ background:C.inBg, borderRadius:6, padding:8 }}>
+                  {[{l:"pH",v:78,ok:true},{l:"DBO5",v:60,ok:true},{l:"SST",v:124,ok:false},{l:"Grasas",v:114,ok:false}].map(b=>(
+                    <div key={b.l} style={{ marginBottom:6 }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", fontSize:7, marginBottom:2 }}><span style={{ fontWeight:500 }}>{b.l}</span><span style={{ color:b.ok?C.ok:C.err, fontWeight:600 }}>{b.v}%</span></div>
+                      <div style={{ background:C.ph, borderRadius:3, height:8, overflow:"hidden" }}><div style={{ background:b.ok?pc:C.err, width:Math.min(b.v,100)+"%", height:"100%", borderRadius:3 }}/></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:4 }}>Donut</div>
+                <div style={{ background:C.inBg, borderRadius:6, padding:8, display:"flex", alignItems:"center", gap:8 }}>
+                  <svg width="56" height="56" viewBox="0 0 56 56" style={{ flexShrink:0 }}>
+                    <circle cx="28" cy="28" r="20" fill="none" stroke={C.ph} strokeWidth="10"/>
+                    <circle cx="28" cy="28" r="20" fill="none" stroke={pc} strokeWidth="10" strokeDasharray="75.4 125.6" strokeLinecap="round" transform="rotate(-90 28 28)"/>
+                    <circle cx="28" cy="28" r="20" fill="none" stroke={C.err} strokeWidth="10" strokeDasharray="25.1 175.9" strokeDashoffset="-75.4" strokeLinecap="round" transform="rotate(-90 28 28)"/>
+                    <text x="28" y="32" textAnchor="middle" fontSize="10" fontWeight="700" fill={pc}>75%</text>
+                  </svg>
+                  <div>
+                    {[[pc,"Cumple","9"],[C.err,"Excede","3"]].map(([c,l,n])=>(
+                      <div key={l} style={{ display:"flex", alignItems:"center", gap:4, marginBottom:4 }}>
+                        <div style={{ width:8, height:8, borderRadius:2, background:c }}/><span style={{ fontSize:7, color:C.muted }}>{l}</span><span style={{ fontSize:7, fontWeight:700, color:c }}>{n}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style={{ display:"flex", gap:16, alignItems:"center", background:C.inBg, borderRadius:6, padding:8 }}>
+              {[20,28,36].map(s=>(<div key={s} style={{ width:s, height:s, border:"3px solid "+C.ph, borderTop:"3px solid "+pc, borderRadius:"50%", animation:"spin 1s linear infinite" }}/>))}
+              <div style={{ fontSize:9, color:C.muted }}>Cargando datos...</div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 8 — Cards */}
+        {pt===8 && (
+          <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+            <div>
+              <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Stat cards</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:6 }}>
+                {[{label:"Usuarios",value:"74",trend:"up",sub:"+10%",color:pc},{label:"MRR",value:"$4.58M",trend:"up",sub:"+9%",color:C.ok},{label:"Churn",value:"0%",trend:"down",sub:"vs 2%",color:C.err}].map(s=>(
+                  <div key={s.label} style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:6, padding:8, textAlign:"center" }}>
+                    <div style={{ fontSize:7, color:C.muted, textTransform:"uppercase", fontWeight:600 }}>{s.label}</div>
+                    <div style={{ fontSize:14, fontWeight:700, color:s.color, margin:"2px 0" }}>{s.value}</div>
+                    <div style={{ fontSize:7, color:C.ok }}>{s.trend==="up"?"↑ ":"↓ "}{s.sub}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:m?"1fr":"1fr 1fr", gap:8 }}>
+              <div>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:4 }}>Card con acciones</div>
+                <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:6, overflow:"hidden" }}>
+                  <div style={{ padding:"6px 8px", borderBottom:"1px solid "+C.border, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                    <span style={{ fontSize:9, fontWeight:700 }}>Reporte Q1</span>
+                    <span style={{ background:C.ok+"20", color:C.ok, padding:"1px 6px", borderRadius:9999, fontSize:7, fontWeight:600 }}>OK</span>
+                  </div>
+                  <div style={{ padding:"6px 8px" }}>
+                    <div style={{ fontSize:8, color:C.muted, marginBottom:6 }}>Analisis primer trimestre.</div>
+                    <div style={{ display:"flex", gap:4 }}>
+                      <div style={{ background:pc, color:"#fff", padding:"2px 8px", borderRadius:4, fontSize:7, fontWeight:600 }}>Ver</div>
+                      <div style={{ color:pc, padding:"2px 8px", borderRadius:4, fontSize:7, fontWeight:600, border:"1px solid "+pc }}>Exportar</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:4 }}>Timeline</div>
+                <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:6, padding:8 }}>
+                  {[{time:"09:15",text:"Login exitoso",color:C.ok},{time:"09:20",text:"Descargo reporte",color:pc},{time:"10:00",text:"Edito usuario",color:C.purp}].map((a,i)=>(
+                    <div key={i} style={{ display:"flex", gap:8, marginBottom:i<2?8:0 }}>
+                      <div style={{ display:"flex", flexDirection:"column", alignItems:"center" }}>
+                        <div style={{ width:12, height:12, borderRadius:"50%", background:a.color+"20", flexShrink:0 }}/>
+                        {i<2&&<div style={{ width:1, flex:1, background:C.border, marginTop:2 }}/>}
+                      </div>
+                      <div><div style={{ fontSize:8, fontWeight:600 }}>{a.text}</div><div style={{ fontSize:7, color:C.muted }}>{a.time}</div></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:m?"1fr":"1fr 1fr", gap:8 }}>
+              <div>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:4 }}>List items</div>
+                <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:6, overflow:"hidden" }}>
+                  {[{icon:"&#128202;",title:"Dashboard",desc:"Vista general"},{icon:"&#128101;",title:"Usuarios",desc:"3 de 5"},{icon:"&#128203;",title:"Auditoria",desc:"142 registros"}].map((item,i)=>(
+                    <div key={item.title} style={{ display:"flex", alignItems:"center", gap:6, padding:"5px 8px", borderBottom:i<2?"1px solid "+C.border:"none" }}>
+                      <span style={{ fontSize:12 }} dangerouslySetInnerHTML={{__html:item.icon}}/>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontSize:9, fontWeight:600 }}>{item.title}</div>
+                        <div style={{ fontSize:7, color:C.muted }}>{item.desc}</div>
+                      </div>
+                      <span style={{ color:pc, fontSize:10 }}>&#8594;</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize:9, fontWeight:600, marginBottom:4 }}>Panel de notificaciones</div>
+                <div style={{ background:"#fff", border:"1px solid "+C.border, borderRadius:6, overflow:"hidden" }}>
+                  <div style={{ padding:"5px 8px", borderBottom:"1px solid "+C.border, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                    <span style={{ fontSize:8, fontWeight:700 }}>Notificaciones</span>
+                    <span style={{ fontSize:7, color:pc, cursor:"pointer" }}>Marcar leidas</span>
+                  </div>
+                  {[{title:"Nuevo usuario registrado",desc:"carlos@ se unio al equipo",time:"hace 2h",unread:true},{title:"Reporte completado",desc:"Vertimientos Q1 listo",time:"hace 5h",unread:true},{title:"Backup exitoso",desc:"4.2 GB procesados",time:"ayer",unread:false}].map((n,i)=>(
+                    <div key={i} style={{ padding:"5px 8px", borderBottom:i<2?"1px solid "+C.border:"none", background:n.unread?pc+"05":"#fff", display:"flex", gap:6, alignItems:"flex-start" }}>
+                      {n.unread&&<div style={{ width:5, height:5, borderRadius:"50%", background:pc, flexShrink:0, marginTop:4 }}/>}
+                      <div style={{ flex:1, marginLeft:n.unread?0:11 }}>
+                        <div style={{ fontSize:8, fontWeight:n.unread?700:400 }}>{n.title}</div>
+                        <div style={{ fontSize:7, color:C.muted }}>{n.desc} - {n.time}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize:9, fontWeight:600, marginBottom:6 }}>Pricing cards</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:6 }}>
+                {[{plan:"Starter",price:"$120K",features:["5 usuarios","1 GB"],color:C.muted,pop:false},{plan:"Professional",price:"$580K",features:["15 usuarios","10 GB","API"],color:pc,pop:true},{plan:"Enterprise",price:"$1.2M",features:["Ilimitado","100 GB","SSO"],color:C.purp,pop:false}].map(p=>(
+                  <div key={p.plan} style={{ background:"#fff", border:p.pop?"2px solid "+pc:"1px solid "+C.border, borderRadius:6, padding:8, position:"relative", overflow:"hidden" }}>
+                    {p.pop&&<div style={{ position:"absolute", top:0, left:0, right:0, background:pc, color:"#fff", fontSize:6, fontWeight:700, textAlign:"center", padding:"1px 0" }}>POPULAR</div>}
+                    <div style={{ marginTop:p.pop?10:0 }}>
+                      <div style={{ fontSize:9, fontWeight:700, color:p.color }}>{p.plan}</div>
+                      <div style={{ fontSize:14, fontWeight:700, margin:"2px 0" }}>{p.price}<span style={{ fontSize:7, color:C.muted }}>/mes</span></div>
+                      {p.features.map(f=><div key={f} style={{ fontSize:7, color:C.muted, marginBottom:2 }}><span style={{ color:C.ok }}>✓</span> {f}</div>)}
+                      <div style={{ background:p.pop?pc:C.ph, color:p.pop?"#fff":C.muted, padding:"3px 0", borderRadius:4, fontSize:8, fontWeight:600, textAlign:"center", marginTop:6 }}>{p.pop?"Seleccionar":"Elegir"}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<BrandingPreview />);
+</script>
+</body>
+</html>
