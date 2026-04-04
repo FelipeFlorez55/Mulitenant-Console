@@ -4692,10 +4692,10 @@ export default function App() {
           </div>
         </div>
         <div style={{ flex:1, display:"flex", flexDirection:"column", overflow:"hidden" }}>
-          <div style={{ padding:mob?"10px 12px":"12px 24px", background:"#fff", borderBottom:"1px solid "+C.border, display:"flex", alignItems:"center", justifyContent:"space-between", flexShrink:0 }}>
-            <div style={{ fontSize:13, color:C.muted, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-              {!mob&&(mode==="admin"?"⚡ Admin":"mi-empresa")+" / "}
-              <span style={{ color:C.text, fontWeight:500 }}>{cur?cur.label:""}</span>
+          <div style={{ padding:mob?"10px 12px":"12px 24px", background:C.card, borderBottom:"1px solid "+C.border, display:"flex", alignItems:"center", justifyContent:"space-between", flexShrink:0 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:4, fontSize:13, overflow:"hidden", whiteSpace:"nowrap" }}>
+              {!mob&&<><span onClick={()=>setNav(mode==="admin"?"admin-overview":"dashboard")} style={{ color:pc, cursor:"pointer" }}>{mode==="admin"?"⚡ Admin":"mi-empresa"}</span><span style={{ color:C.muted }}>/</span></>}
+              <span style={{ color:C.text, fontWeight:600 }}>{cur?cur.label:""}</span>
             </div>
             <div style={{ display:"flex", gap:8, alignItems:"center" }}>
               {mode==="admin"&&<div style={{ background:C.err+"20", color:C.err, padding:"2px 8px", borderRadius:9999, fontSize:11, fontWeight:600 }}>ADMIN</div>}
