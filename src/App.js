@@ -1296,7 +1296,7 @@ function MaintenanceScreen() {
             </Cd>
             <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
               <Bt variant="outline" style={{ borderColor:"#334155", color:"#94a3b8" }}>🔔 Notifícame cuando vuelva</Bt>
-              <a href="#" style={{ color:"#64748b", fontSize:12, display:"flex", alignItems:"center", textDecoration:"none" }}>Estado del servicio →</a>
+              <button type="button" style={{ background:"none", border:"none", cursor:"pointer", color:"#64748b", fontSize:12, display:"flex", alignItems:"center", textDecoration:"none", padding:0 }}>Estado del servicio →</button>
             </div>
           </div>
         )}
@@ -1704,7 +1704,7 @@ function TableSkeleton({ rows=4, cols=4 }) {
 // ─────────────────────────────────────────────
 function StatesGalleryScreen({ setNav }) {
   const m = useM(); const C = useC();
-  const [netErr, setNetErr] = useState(false);
+  const [, setNetErr] = useState(false);
   const [section, setSection] = useState(0);
   const sections = ["Vacíos","Carga / Skeleton","Error de red","Primer uso"];
 
@@ -2058,7 +2058,7 @@ function ShellScreen({ setNav }) {
 }
 
 function OnboardingIncompleteScreen({ setNav }) {
-  const m = useM(); const C = useC();
+  useM(); const C = useC();
   const steps2 = [
     { label:"Datos de empresa",       done:true,  screen:"company-profile" },
     { label:"Configuración regional", done:true,  screen:"config" },
@@ -2195,7 +2195,7 @@ function CompanyProfileScreen() {
 }
 
 function ActiveSessionsScreen() {
-  const m = useM(); const C = useC();
+  useM(); const C = useC();
   const [showConfirm, setShowConfirm] = useState(false);
   const sessions = [
     { device:"Chrome · macOS",    ip:"181.55.32.14", loc:"Bogotá, CO",   time:"Ahora",   current:true,  icon:"💻" },
@@ -2335,7 +2335,7 @@ function HabeasDataScreen() {
 }
 
 function SupportScreen() {
-  const m = useM(); const C = useC();
+  useM(); const C = useC();
   const [tab, setTab] = useState(0);
   const [showTicket, setShowTicket] = useState(false);
   const tabs = ["Tickets","Estado del servicio","Base de conocimiento"];
@@ -2461,7 +2461,7 @@ function NotificationsScreen() {
 }
 
 function NotifPrefsScreen() {
-  const C = useC();
+  useC();
   return (
     <div>
       <SectionHeader title="Preferencias de notificaciones" prd="PRD 006-A"/>
@@ -2893,7 +2893,7 @@ function UserDetailScreen({ setNav }) {
 }
 
 function ConfigScreen() {
-  const m = useM(); const C = useC();
+  const m = useM(); useC();
   return (
     <div>
       <SectionHeader title="Configuración" prd="PRD 009"/>
@@ -3155,7 +3155,6 @@ function AdminOverviewScreen() {
   const m = useM(); const C = useC();
   const mrr = [2100,2400,2800,3100,3400,3800,4200,4580];
   const tenants = [4,5,6,7,8,8,9,11];
-  const churn = [0,1,0,0,1,0,0,0];
   return (
     <div>
       <SectionHeader title="Overview ejecutivo" prd="PRD 002" sub="Métricas globales de la plataforma · Abril 2026"/>
@@ -3604,6 +3603,7 @@ function AdminChangelogScreen() {
 }
 
 // 7. DOMINIOS PERSONALIZADOS
+// eslint-disable-next-line no-unused-vars
 function AdminCustomDomainsScreen() {
   const C = useC();
   const [showDet, setShowDet] = useState(false);
@@ -3650,6 +3650,7 @@ function AdminAnalyticsScreen() {
   const churnData = [1,0,1,0,1,0,0,0];
   const activeUsers = [18,25,34,42,51,58,67,74];
   const apiCalls = [8200,12400,18600,22100,28400,31200,35600,38900];
+  // eslint-disable-next-line no-unused-vars
   const storageGB = [1.2,2.1,3.4,5.0,6.8,8.2,9.5,11.1];
 
   const cohorts = [
